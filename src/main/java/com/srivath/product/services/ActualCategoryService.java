@@ -12,7 +12,7 @@ import java.util.Optional;
 @Primary
 public class ActualCategoryService implements CategoryService{
 
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
     public ActualCategoryService(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;

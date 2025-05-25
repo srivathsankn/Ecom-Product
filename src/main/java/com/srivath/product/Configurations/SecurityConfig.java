@@ -18,7 +18,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/products").hasAuthority("SCOPE_ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/products").hasAuthority("SCOPE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/products").hasAuthority("SCOPE_ADMIN")
-                        .anyRequest().authenticated()
+                        //.anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()));
         return http.build();

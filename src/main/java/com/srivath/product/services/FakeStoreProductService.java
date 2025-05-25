@@ -40,7 +40,7 @@ public class FakeStoreProductService implements ProductService{
     }
 
     @Override
-    public Product getProductbyId(long id) throws ProductNotFoundException {
+    public Product getProductById(long id) throws ProductNotFoundException {
         FakeStoreProductDTO dto = restTemplate.getForObject("https://fakestoreapi.com/products/"+ id, FakeStoreProductDTO.class);
         if (dto == null)
             throw new ProductNotFoundException("Product with id " + id + " is not found!!!");
@@ -133,5 +133,11 @@ public class FakeStoreProductService implements ProductService{
 
         this.restTemplate.delete("https://fakestoreapi.com/products/"+id);
         return true;
+    }
+
+
+    @Override
+    public List<Product> searchProduct(String query) {
+        return List.of();
     }
 }

@@ -3,6 +3,7 @@ package com.srivath.product.models;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -20,6 +21,7 @@ public class Category extends BaseModel{
     private String name;
     @OneToMany(mappedBy = "category", fetch=FetchType.LAZY) // LAZY means it will not pull all Products while pulling a category record.
     @JsonIgnore
+    @JsonManagedReference
     private List<Product> products;
     public Category()
     {

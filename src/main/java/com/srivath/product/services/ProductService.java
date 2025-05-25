@@ -12,7 +12,7 @@ public interface ProductService {
 
     public List<Product> getAllProducts();
 
-    public Product getProductbyId(long Id) throws ProductNotFoundException;
+    public Product getProductById(long Id) throws ProductNotFoundException;
 
     public List<Product> getAllProductsInCategory(String category);
 
@@ -23,5 +23,8 @@ public interface ProductService {
     public Product replaceProduct(long id, ProductDTO productDTO);
 
     public boolean removeProduct(long id);
+
+    public List<Product> searchProduct(String query);
+
 
 }

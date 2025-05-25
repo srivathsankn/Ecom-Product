@@ -1,11 +1,14 @@
 package com.srivath.product.services;
 
+import co.elastic.clients.elasticsearch._types.query_dsl.QueryBuilders;
 import com.srivath.product.DTOs.ProductDTO;
+import com.srivath.product.elasticsearchrepositories.ProductESRepository;
 import com.srivath.product.exceptions.ProductNotFoundException;
 import com.srivath.product.models.Category;
 import com.srivath.product.models.Product;
 import com.srivath.product.repositories.ProductRepository;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.elasticsearch.annotations.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,13 +18,17 @@ import java.util.Optional;
 @Primary
 public class ActualProductService implements ProductService{
 
-    private ProductRepository productRepository;
-    private CategoryService categoryService;
+    private final ProductRepository productRepository;
+    private final CategoryService categoryService;
+    private final ProductESRepository productESRepository;
 
-    public ActualProductService(ProductRepository productRepository, CategoryService categoryService)
+
+    public ActualProductService(ProductRepository productRepository, CategoryService categoryService, ProductESRepository productESRepository)
     {
         this.productRepository = productRepository;
         this.categoryService = categoryService;
+        //this.elasticSearchClient = elasticSearchClient;
+        this.productESRepository = productESRepository;
     }
 
     @Override
@@ -30,7 +37,7 @@ public class ActualProductService implements ProductService{
     }
 
     @Override
-    public Product getProductbyId(long id) throws ProductNotFoundException {
+    public Product getProductById(long id) throws ProductNotFoundException {
         Optional<Product> product = productRepository.findById(id);
         if(!product.isEmpty())
             return product.get();
@@ -47,14 +54,18 @@ public class ActualProductService implements ProductService{
     @Override
     public Product addProduct(ProductDTO productDTO) {
         Product product = this.convertProductDTOToProduct(productDTO);
-        return this.productRepository.save(product);
+        Product savedProduct =  this.productRepository.save(product);
+        this.productESRepository.save(savedProduct);
+        return savedProduct;
     }
 
     @Override
     public Product replaceProduct(long id, ProductDTO productDTO) {
         Product product = this.convertProductDTOToProduct(productDTO);
         product.setId(id);
-        return this.productRepository.save(product);
+        Product updatedProduct = this.productRepository.save(product);
+        this.productESRepository.save(updatedProduct);
+        return updatedProduct;
     }
 
     public Product convertProductDTOToProduct(ProductDTO productDTO)
@@ -77,13 +88,24 @@ public class ActualProductService implements ProductService{
         Product product = null;
         try
         {
-            product = this.getProductbyId(id);
+            product = this.getProductById(id);
             this.productRepository.delete(product);
+            this.productESRepository.delete(product);
         }
         catch(ProductNotFoundException e)
         {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public List<Product> searchProduct(String query) {
+
+//        SearchRequest searchRequest =  SearchRequest.of(searchQuery -> searchQuery.query(query));
+//        SearchResponse<Product> searchResponse = elasticSearchClient
+//                .search(s -> s.index("products").query(searchQuery, Product.class));
+
+        return this.productESRepository.findByNameContainingOrDescriptionContaining(query, query);
     }
 }

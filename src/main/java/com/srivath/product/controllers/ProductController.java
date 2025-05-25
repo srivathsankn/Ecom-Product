@@ -37,7 +37,7 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable("id") long id) throws ProductNotFoundException {
-        Product product = productService.getProductbyId(id);
+        Product product = productService.getProductById(id);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
@@ -82,5 +82,12 @@ public class ProductController {
         if (!result)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Product>> searchProduct(@RequestParam("word") String word)
+    {
+        List<Product> products = productService.searchProduct(word);
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 }
