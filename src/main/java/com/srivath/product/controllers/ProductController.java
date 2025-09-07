@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +27,12 @@ public class ProductController {
     public ProductController(ProductService productService)
     {
         this.productService = productService;
+    }
+
+
+    @GetMapping("/debug/roles")
+    public ResponseEntity<?> debugRoles(Authentication auth) {
+        return ResponseEntity.ok(auth);
     }
 
     @GetMapping(value = {"/",""} )
@@ -69,8 +76,7 @@ public class ProductController {
 //    }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> replaceProduct(@PathVariable long id, @RequestBody ProductDTO productDTO)
-    {
+    public ResponseEntity<Product> replaceProduct(@PathVariable long id, @RequestBody ProductDTO productDTO) throws ProductNotFoundException {
         Product replacedProduct = productService.replaceProduct(id, productDTO);
         return new ResponseEntity<>(replacedProduct, HttpStatus.OK);
     }

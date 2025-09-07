@@ -3,6 +3,7 @@ package com.srivath.product.models;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -37,8 +38,11 @@ public class Product  {
     @Field(type = FieldType.Text)
     private String description;
     private Double price;
+    @Field(type = FieldType.Text)
     private String image;
     @ManyToOne
-    @JsonBackReference
+    //@JsonBackReference
+    //@JoinColumn(name = "category_id", nullable = false)
+    //@JsonIgnore
     private Category category;
 }

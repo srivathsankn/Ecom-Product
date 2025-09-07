@@ -20,7 +20,7 @@ public interface ProductService {
 
     //public Product updateProduct(long id, ProductPriceDTO productPriceDTO);
 
-    public Product replaceProduct(long id, ProductDTO productDTO);
+    public Product replaceProduct(long id, ProductDTO productDTO) throws ProductNotFoundException;
 
     public boolean removeProduct(long id);
 

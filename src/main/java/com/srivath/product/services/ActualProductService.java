@@ -60,12 +60,18 @@ public class ActualProductService implements ProductService{
     }
 
     @Override
-    public Product replaceProduct(long id, ProductDTO productDTO) {
+    public Product replaceProduct(long id, ProductDTO productDTO) throws ProductNotFoundException {
         Product product = this.convertProductDTOToProduct(productDTO);
         product.setId(id);
-        Product updatedProduct = this.productRepository.save(product);
-        this.productESRepository.save(updatedProduct);
-        return updatedProduct;
+        if (productRepository.findById(id).isPresent()) {
+            Product updatedProduct = this.productRepository.save(product);
+            this.productESRepository.save(updatedProduct);
+            return updatedProduct;
+        }
+        else
+        {
+            throw new ProductNotFoundException("Product with id " + id + " not found. Cannot replace.");
+        }
     }
 
     public Product convertProductDTOToProduct(ProductDTO productDTO)

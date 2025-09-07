@@ -10,6 +10,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.util.List;
 
@@ -19,10 +21,11 @@ import java.util.List;
 @JsonDeserialize
 public class Category extends BaseModel{
     private String name;
-    @OneToMany(mappedBy = "category", fetch=FetchType.LAZY) // LAZY means it will not pull all Products while pulling a category record.
-    @JsonIgnore
-    @JsonManagedReference
-    private List<Product> products;
+//    @OneToMany(mappedBy = "category", fetch=FetchType.LAZY) // LAZY means it will not pull all Products while pulling a category record.
+//    //@JsonIgnore
+//    //@Field(type = FieldType.Nested) // This is used to indicate that the products field is a nested object in Elasticsearch.
+//    @JsonManagedReference
+//    private List<Product> products;
     public Category()
     {
         name = "";

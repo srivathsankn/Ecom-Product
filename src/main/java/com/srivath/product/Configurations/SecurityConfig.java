@@ -15,11 +15,11 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST, "/products").hasAuthority("SCOPE_ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/products").hasAuthority("SCOPE_ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/products").hasAuthority("SCOPE_ADMIN")
-                        //.anyRequest().authenticated()
-                        .anyRequest().permitAll()
+                        .requestMatchers(HttpMethod.POST, "/products", "/products/").hasRole ("ADMIN")  //hasAuthority("SCOPE_ADMIN") //.hasRole("ADMIN")         //.hasAuthority("SCOPE_ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/products").hasRole("ADMIN")          //.hasAuthority("SCOPE_ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/products").hasRole("ADMIN")       //.hasAuthority("SCOPE_ADMIN")
+                        .anyRequest().authenticated()
+                        //.anyRequest().permitAll()
                 )
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()));
         return http.build();
